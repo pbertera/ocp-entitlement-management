@@ -1,0 +1,26 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ocp-entitlement-manager-operator
+subjects:
+- kind: ServiceAccount
+  name: ocp-entitlement-manager-operator
+roleRef:
+  kind: Role
+  name: ocp-entitlement-manager-operator
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: null
+  name: clusterversion-reader
+#  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: clusterversion-reader
+subjects:
+- kind: ServiceAccount
+  name: ocp-entitlement-manager-operator
+  namespace: ocp-entitlement-manager-operator

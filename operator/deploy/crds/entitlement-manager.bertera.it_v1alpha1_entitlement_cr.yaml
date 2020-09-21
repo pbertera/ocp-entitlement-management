@@ -1,0 +1,7 @@
+apiVersion: entitlement-manager.bertera.it/v1alpha1
+kind: Entitlement
+metadata:
+  name: example-entitlement
+spec:
+  # Add fields here
+  size: 3

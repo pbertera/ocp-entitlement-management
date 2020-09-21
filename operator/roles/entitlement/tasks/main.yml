@@ -1,0 +1,44 @@
+---
+- name: start entitlement manager
+  k8s:
+    definition:
+      kind: Deployment
+      apiVersion: apps/v1
+      metadata:
+        name: 'entitlement-manager'
+        namespace: '{{ meta.namespace }}'
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: ocp-entitlement-manager
+        template:
+          metadata:
+            labels:
+              app: ocp-entitlement-manager
+          spec:
+            serviceAccountName: ocp-entitlement-manager-operator
+            automountServiceAccountToken: true
+            containers:
+            - name: ocp-entitlement-manager
+              image: quay.io/pbertera/ocp-entitlement-manager
+              imagePullPolicy: Always
+              env:
+              - name: SUPPORT_LEVEL
+                value: '{{ support_level }}'
+              - name: LOOP_HOURS
+                value: '{{ loop_hours }}'
+              - name: CLUSTER_UUID
+                value: '{{ cluster_UUID }}'
+              - name: USAGE
+                value: '{{ usage }}'
+              - name: OCM_CONFIG
+                value: "/tmp/.ocm.json"
+              volumeMounts:
+              - name: ocm-token
+                mountPath: /data
+                readOnly: true
+            volumes:
+            - name: ocm-token
+              secret:
+                secretName: '{{ocm_token_secret}}'

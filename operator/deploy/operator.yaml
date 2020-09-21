@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocp-entitlement-manager-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ocp-entitlement-manager-operator
+  template:
+    metadata:
+      labels:
+        name: ocp-entitlement-manager-operator
+    spec:
+      serviceAccountName: ocp-entitlement-manager-operator
+      containers:
+        - name: ocp-entitlement-manager-operator
+          # Replace this with the built image name
+          image: "quay.io/pbertera/ocp-entitlement-manager-operator"
+          imagePullPolicy: "Always"
+          volumeMounts:
+          - mountPath: /tmp/ansible-operator/runner
+            name: runner
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "ocp-entitlement-manager-operator"
+            - name: ANSIBLE_GATHERING
+              value: explicit
+      volumes:
+        - name: runner
+          emptyDir: {}
