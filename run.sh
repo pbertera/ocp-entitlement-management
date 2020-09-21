@@ -1,0 +1,97 @@
+#!/bin/bash
+
+set -eo pipefail
+
+TOKENFILE="/data/ocm-token.json"
+MAX_FAIL=3
+FAIL=0
+
+function get_cluster_uuid(){
+    CLUSTER_UUID=123
+}
+
+function reconcile() {
+    if [ $FAIL -gt $MAX_FAIL ]; then
+        echo "ERROR: Reconciliation failed"
+        exit 1
+    fi
+    echo "Reconciling, sending '$RECONCILE_JSON' to $SUB_ENDPOINT, result:"
+    echo "$RECONCILE_JSON" | ocm patch "$SUB_ENDPOINT"
+}
+
+function check(){
+    if [ -f "$TOKENFILE" ]; then
+        ocm login "$(cat "$TOKENFILE")"
+    else
+        echo "ERROR: $TOKENFILE not found"
+        exit 1
+    fi
+
+    [[ -z "$CLUSTER_UUID" ]] && get_cluster_uuid
+
+    SUB_ENDPOINT=$(ocm get "/api/clusters_mgmt/v1/clusters?search=external_id%3D%27${CLUSTER_UUID}%27" | jq -r '.items[0].subscription.href')
+
+    if [ "$SUB_ENDPOINT" == "null" ]; then
+        echo "ERROR: subscription for clsuter $CLUSTER_UUID not found"
+        exit 1
+    fi
+
+    echo "Subscription API endpoint: $SUB_ENDPOINT"
+
+    ocm get "$SUB_ENDPOINT" > "/tmp/${CLUSTER_UUID}.subscription.json"
+
+    SUPPORT_LEVEL_F=$(jq -r '.support_level' "/tmp/${CLUSTER_UUID}.subscription.json")
+    SERVICE_LEVEL_F=$(jq -r '.service_level' "/tmp/${CLUSTER_UUID}.subscription.json")
+    STATUS_F=$(jq -r '.status' "/tmp/${CLUSTER_UUID}.subscription.json")
+    USAGE_F=$(jq -r '.usage' "/tmp/${CLUSTER_UUID}.subscription.json")
+    CPU_TOTAL_F=$(jq -r '.cpu_total' "/tmp/${CLUSTER_UUID}.subscription.json")
+    SOCKET_TOTAL_F=$(jq -r '.socket_total' "/tmp/${CLUSTER_UUID}.subscription.json")
+
+    RECONCILE="no"
+    RECONCILE_JSON="{"
+
+    if [ "$SUPPORT_LEVEL" ]; then
+        echo "Found $SUPPORT_LEVEL_F support level, wanted: $SUPPORT_LEVEL"
+        if [ "$SUPPORT_LEVEL" != "$SUPPORT_LEVEL_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"support_level\":\"$SUPPORT_LEVEL\","
+        fi
+    fi
+
+    if [ "$SERVICE_LEVEL" ]; then
+        echo "Found $SERVICE_LEVEL_F service level, wanted: $SERVICE_LEVEL"
+        if [ "$SERVICE_LEVEL" != "$SERVICE_LEVEL_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"service_level\":\"$SERVICE_LEVEL\","
+        fi
+    fi
+
+    if [ "$STATUS" ]; then
+        echo "Found $STATUS_F status, wanted: $STATUS"
+        if [ "$STATUS" != "$STATUS_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"status\":\"$STATUS\","
+        fi
+    fi
+
+    if [ "$USAGE" ]; then
+        echo "Found $USAGE_F usage, wanted: $USAGE"
+        if [ "$USAGE" != "$USAGE_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"usage\":\"$USAGE\","
+        fi
+    fi
+    RECONCILE_JSON="${RECONCILE_JSON::-1} }"
+    if [ "$RECONCILE" == "yes" ]; then
+        FAIL=$((FAIL+1))
+        reconcile
+    else
+        FAIL=0
+    fi
+}
+
+while true; do
+    echo "Checking cluster entitelment status"
+    check
+    sleep 10
+done
