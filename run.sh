@@ -2,12 +2,17 @@
 
 set -eo pipefail
 
-TOKENFILE="/data/ocm-token.json"
-MAX_FAIL=3
+TOKENFILE="${TOKENFILE-/data/ocm-token.json}"
+MAX_FAIL="${MAX_FAIL-3}"
+LOOP_HOURS="${LOOP_HOURS-1}"
 FAIL=0
 
 function get_cluster_uuid(){
-    CLUSTER_UUID=123
+    TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+    CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    API="https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT"
+    CLUSTER_UUID=$(curl -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
+    echo "Cluster UUID is $CLUSTER_UUID"
 }
 
 function reconcile() {
@@ -93,5 +98,5 @@ function check(){
 while true; do
     echo "Checking cluster entitelment status"
     check
-    sleep 10
+    sleep $(($LOOP_HOURS*3600))
 done
