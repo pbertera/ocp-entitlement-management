@@ -11,7 +11,7 @@ function get_cluster_uuid(){
     TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
     CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     API="https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT"
-    CLUSTER_UUID=$(curl -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
+    CLUSTER_UUID=$(curl -s -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
     echo "Cluster UUID is $CLUSTER_UUID"
 }
 
