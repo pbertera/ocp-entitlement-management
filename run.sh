@@ -95,6 +95,8 @@ function check(){
     fi
 }
 
+trap 'check' SIGHUP
+
 while true; do
     echo "Checking cluster entitelment status"
     check
