@@ -51,7 +51,7 @@ $ cat <<EOF | oc create -f -
 apiVersion: "entitlement-manager.bertera.it/v1alpha1"
 kind: "Entitlement"
 metadata:
-  name: "entitlement-manager"
+  name: "cluster-entitlement"
 spec:
   ocmTokenSecret: "ocm-token"
   loopHours: 1
@@ -63,8 +63,8 @@ spec:
 
 ```
 $ oc get entitlement
-NAME          SUPPORT        USAGE
-entitlement   Self-Support   Production
+NAME                  SUPPORT        USAGE
+cluster-entitlement   Self-Support   Production
 ```
 
 After creating the `Entitlement` a new deployment named `entitlement-manager` will be created. This deployment controls a pod running the manager.
