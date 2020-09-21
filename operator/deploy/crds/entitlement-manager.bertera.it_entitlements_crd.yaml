@@ -16,7 +16,35 @@ spec:
     openAPIV3Schema:
       type: object
       x-kubernetes-preserve-unknown-fields: true
+      properties:
+        spec:
+          type: object
+          properties:
+            supportLevel:
+              type: string
+              pattern: '(^Self-Support$|^Eval$|^Standard$|^Premium$|^None$)'
+              # default: 'Self-Support'
+            usage:
+              type: string
+              pattern: '(^Production$|^Development/Test$|^Disaster Recovery$|^Academic$)'
+              # default: 'Production'
+            ocmTokenSecret:
+              type: string
+              # default: 'ocm-secret'
+            loopHours:
+              type: string
+            clusterUUID:
+              type: string
   versions:
   - name: v1alpha1
     served: true
     storage: true
+  additionalPrinterColumns:
+  - name: Support
+    type: string
+    JSONPath: .spec.supportLevel
+    description: Support Level
+  - name: usage
+    type: string
+    JSONPath: .spec.usage
+    description: Usage

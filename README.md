@@ -53,16 +53,24 @@ kind: "Entitlement"
 metadata:
   name: "entitlement-manager"
 spec:
-  supportLevel: Premium
   ocmTokenSecret: "ocm-token"
   loopHours: 1
   supportLevel: "Self-Support"
   usage: "Production"
 ```
 
+7. check the entitlment
+
+```
+$ oc get entitlement
+NAME          SUPPORT        USAGE
+entitlement   Self-Support   Production
+```
+
 After creating the `Entitlement` a new deployment named `entitlement-manager` will be created. This deployment controls a pod running the manager.
 In case there is a mismatch between the `Entitlement` and the entitlement assigned to the cluster the manager will try to apply the values of the `Entitlement` in case of a failure the controlled pod will exits.
 Checking the pod logs should help troubleshooting the issue
+
 
 ### Entitlment specs
 
