@@ -83,3 +83,9 @@ Checking the pod logs should help troubleshooting the issue
 ## Deployment in a static pod
 
 TODO
+
+## Resources
+
+- [OpenShift Account Management Service API](https://api.openshift.com/?urls.primaryName=Accounts%20management%20service)
+- [ocm-cli](https://github.com/openshift-online/ocm-cli)
+- [Operator SDK](https://sdk.operatorframework.io/)
