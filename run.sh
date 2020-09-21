@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 
 set -eo pipefail
 
@@ -21,7 +21,7 @@ function reconcile() {
 
 function check(){
     if [ -f "$TOKENFILE" ]; then
-        ocm login "$(cat "$TOKENFILE")"
+        ocm login --token "$(cat "$TOKENFILE")"
     else
         echo "ERROR: $TOKENFILE not found"
         exit 1
