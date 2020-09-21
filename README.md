@@ -73,3 +73,5 @@ Checking the pod logs should help troubleshooting the issue
 - `clusterUUID`: (string) the OpenShif cluster UUID, if not defined the operator will gather the UUID from the API (here the reason for the ClusterRole)
 
 ## Deployment in a static pod
+
+TODO
