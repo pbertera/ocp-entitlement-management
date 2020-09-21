@@ -7,28 +7,32 @@ MAX_FAIL="${MAX_FAIL-3}"
 LOOP_HOURS="${LOOP_HOURS-1}"
 FAIL=0
 
+function log() {
+    echo `date` $@
+}
+
 function get_cluster_uuid(){
     TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
     CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     API="https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT"
     CLUSTER_UUID=$(curl -s -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
-    echo "Cluster UUID is $CLUSTER_UUID"
+    log "Cluster UUID is $CLUSTER_UUID"
 }
 
 function reconcile() {
     if [ $FAIL -gt $MAX_FAIL ]; then
-        echo "ERROR: Reconciliation failed"
+        log "ERROR: Reconciliation failed"
         exit 1
     fi
-    echo "Reconciling, sending '$RECONCILE_JSON' to $SUB_ENDPOINT, result:"
-    echo "$RECONCILE_JSON" | ocm patch "$SUB_ENDPOINT"
+    log "Reconciling, sending '$RECONCILE_JSON' to $SUB_ENDPOINT, result:"
+    log "$RECONCILE_JSON" | ocm patch "$SUB_ENDPOINT"
 }
 
 function check(){
     if [ -f "$TOKENFILE" ]; then
         ocm login --token "$(cat "$TOKENFILE")"
     else
-        echo "ERROR: $TOKENFILE not found"
+        log "ERROR: $TOKENFILE not found"
         exit 1
     fi
 
@@ -37,11 +41,11 @@ function check(){
     SUB_ENDPOINT=$(ocm get "/api/clusters_mgmt/v1/clusters?search=external_id%3D%27${CLUSTER_UUID}%27" | jq -r '.items[0].subscription.href')
 
     if [ "$SUB_ENDPOINT" == "null" ]; then
-        echo "ERROR: subscription for clsuter $CLUSTER_UUID not found"
+        log "ERROR: subscription for clsuter $CLUSTER_UUID not found"
         exit 1
     fi
 
-    echo "Subscription API endpoint: $SUB_ENDPOINT"
+    log "Subscription API endpoint: $SUB_ENDPOINT"
 
     ocm get "$SUB_ENDPOINT" > "/tmp/${CLUSTER_UUID}.subscription.json"
 
@@ -56,7 +60,7 @@ function check(){
     RECONCILE_JSON="{"
 
     if [ "$SUPPORT_LEVEL" ]; then
-        echo "Found $SUPPORT_LEVEL_F support level, wanted: $SUPPORT_LEVEL"
+        log "Found $SUPPORT_LEVEL_F support level, wanted: $SUPPORT_LEVEL"
         if [ "$SUPPORT_LEVEL" != "$SUPPORT_LEVEL_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"support_level\":\"$SUPPORT_LEVEL\","
@@ -64,7 +68,7 @@ function check(){
     fi
 
     if [ "$SERVICE_LEVEL" ]; then
-        echo "Found $SERVICE_LEVEL_F service level, wanted: $SERVICE_LEVEL"
+        log "Found $SERVICE_LEVEL_F service level, wanted: $SERVICE_LEVEL"
         if [ "$SERVICE_LEVEL" != "$SERVICE_LEVEL_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"service_level\":\"$SERVICE_LEVEL\","
@@ -72,7 +76,7 @@ function check(){
     fi
 
     if [ "$STATUS" ]; then
-        echo "Found $STATUS_F status, wanted: $STATUS"
+        log "Found $STATUS_F status, wanted: $STATUS"
         if [ "$STATUS" != "$STATUS_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"status\":\"$STATUS\","
@@ -80,7 +84,7 @@ function check(){
     fi
 
     if [ "$USAGE" ]; then
-        echo "Found $USAGE_F usage, wanted: $USAGE"
+        log "Found $USAGE_F usage, wanted: $USAGE"
         if [ "$USAGE" != "$USAGE_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"usage\":\"$USAGE\","
@@ -95,10 +99,8 @@ function check(){
     fi
 }
 
-trap 'check' SIGHUP
-
 while true; do
-    echo "Checking cluster entitelment status"
+    log "Checking cluster entitelment status"
     check
     sleep $(($LOOP_HOURS*3600))
 done
