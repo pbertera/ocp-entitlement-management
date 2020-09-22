@@ -85,6 +85,8 @@ Checking the pod logs should help troubleshooting the issue
 - `ocmTokenSecret`: (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json` (default: 'ocm-token')
 - `loopHours`: (numeric string) interval in hours between entitlements check (default: '1')
 - `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)
+- `displayName`: (string) the cluster display name to show on [https://cloud.redhat.com/openshift/](https://cloud.redhat.com/openshift/) (default: empty)
+- `debug`: (string) if value is `yes` debug is activated on the `entitlement-manager` pod
 
 ## Deployment in a static pod
 
