@@ -13,18 +13,33 @@ function get_cluster_uuid(){
     TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
     CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     API="https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT"
-    CLUSTER_UUID=$(curl -s -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
+
+    if [ "$DEBUG" == "yes" ]; then
+        DEBUG_OPTS="-v"
+    fi
+
+    CLUSTER_UUID=$(curl -s $DEBUG_OPTS -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
     log "Cluster UUID is $CLUSTER_UUID"
 }
 
 function reconcile() {
     log "Reconciling, sending '$RECONCILE_JSON' to $SUB_ENDPOINT, result:"
-    log "$RECONCILE_JSON" | ocm patch "$SUB_ENDPOINT"
+
+    if [ "$DEBUG" == "yes" ]; then
+        DEBUG_OPTS="-v 10"
+    fi
+
+    log "$RECONCILE_JSON" | ocm $DEBUG_OPTS patch "$SUB_ENDPOINT"
 }
 
 function check(){
+    
+    if [ "$DEBUG" == "yes" ]; then
+        DEBUG_OPTS="-v 10"
+    fi
+    
     if [ -f "$TOKENFILE" ]; then
-        ocm login --token "$(cat "$TOKENFILE")"
+        ocm $DEBUG_OPTS login --token "$(cat "$TOKENFILE")"
     else
         log "ERROR: $TOKENFILE not found"
         exit 1
@@ -32,7 +47,7 @@ function check(){
 
     [[ -z "$CLUSTER_UUID" ]] && get_cluster_uuid
 
-    SUB_ENDPOINT=$(ocm get "/api/clusters_mgmt/v1/clusters?search=external_id%3D%27${CLUSTER_UUID}%27" | jq -r '.items[0].subscription.href')
+    SUB_ENDPOINT=$(ocm $DEBUG_OPTS get "/api/clusters_mgmt/v1/clusters?search=external_id%3D%27${CLUSTER_UUID}%27" | jq -r '.items[0].subscription.href')
 
     if [ "$SUB_ENDPOINT" == "null" ]; then
         log "ERROR: subscription for clsuter $CLUSTER_UUID not found"
@@ -41,7 +56,7 @@ function check(){
 
     log "Subscription API endpoint: $SUB_ENDPOINT"
 
-    ocm get "$SUB_ENDPOINT" > "/tmp/${CLUSTER_UUID}.subscription.json"
+    ocm $DEBUG_OPTS get "$SUB_ENDPOINT" > "/tmp/${CLUSTER_UUID}.subscription.json"
 
     SUPPORT_LEVEL_F=$(jq -r '.support_level' "/tmp/${CLUSTER_UUID}.subscription.json")
     USAGE_F=$(jq -r '.usage' "/tmp/${CLUSTER_UUID}.subscription.json")
