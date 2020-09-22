@@ -33,7 +33,6 @@ function reconcile() {
 }
 
 function check(){
-    
     if [ "$DEBUG" == "yes" ]; then
         local DEBUG_OPTS="-v 10"
     fi
@@ -60,6 +59,7 @@ function check(){
 
     SUPPORT_LEVEL_F=$(jq -r '.support_level' "/tmp/${CLUSTER_UUID}.subscription.json")
     USAGE_F=$(jq -r '.usage' "/tmp/${CLUSTER_UUID}.subscription.json")
+    DISPLAY_NAME_F=$(jq -r '.display_name' "/tmp/${CLUSTER_UUID}.subscription.json")
 
     RECONCILE="no"
     RECONCILE_JSON="{"
@@ -77,6 +77,14 @@ function check(){
         if [ "$USAGE" != "$USAGE_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"usage\":\"$USAGE\","
+        fi
+    fi
+
+    if [ "$DISPLAY_NAME" ]; then
+        log "Found $DISPLAY_NAME_F display name, wanted: $DISPLAY_NAME"
+        if [ "$DISPLAY_NAME" != "$DISPLAY_NAME_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"support_level\":\"$DISPLAY_NAME\","
         fi
     fi
 

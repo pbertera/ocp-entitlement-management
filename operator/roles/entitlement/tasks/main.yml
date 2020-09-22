@@ -32,8 +32,12 @@
                 value: '{{ cluster_UUID }}'
               - name: USAGE
                 value: '{{ usage }}'
+              - name: DEBUG
+                value: '{{ debug }}'
               - name: OCM_CONFIG
                 value: "/tmp/.ocm.json"
+              - name: DISPLAY_NAME
+                value: '{{ display_name }}'
               volumeMounts:
               - name: ocm-token
                 mountPath: /data

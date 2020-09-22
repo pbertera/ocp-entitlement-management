@@ -36,6 +36,12 @@ spec:
               pattern: '(^[0-9]+$)'
             clusterUUID:
               type: string
+            debug:
+              type: string
+              pattern: '(^yes$|^no$)'
+            displayName:
+              type: string
+
   versions:
   - name: v1alpha1
     served: true
