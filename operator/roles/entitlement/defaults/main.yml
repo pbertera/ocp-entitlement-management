@@ -3,5 +3,5 @@
 support_level: "Self-Support"
 ocm_token_secret: "ocm-token"
 cluster_UUID: ""
-loop_hours: 1
+loop_hours: "1"
 usage: "Production"

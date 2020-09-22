@@ -80,11 +80,11 @@ Checking the pod logs should help troubleshooting the issue
 
 ### Entitlment specs
 
-- `supportLevel`: (string) valid values: `Self-Support`, `Eval`, `Standard`, `Premium`, `None`
-- `usage`: (string) valid values: `Production`, `Development/Test`, `Disaster Recovery`, `Academic`
-- `ocmTokenSecret`: (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json`
-- `loopHours`: (string) interval in hours between entitlements check
-- `clusterUUID`: (string) the OpenShif cluster UUID, if not defined the operator will gather the UUID from the API (here the reason for the ClusterRole)
+- `supportLevel`: (string) valid values: `Self-Support`, `Eval`, `Standard`, `Premium`, `None` (default: 'Self-Support')
+- `usage`: (string) valid values: `Production`, `Development/Test`, `Disaster Recovery`, `Academic` (default: 'Production')
+- `ocmTokenSecret`: (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json` (default: 'ocm-token')
+- `loopHours`: (numeric string) interval in hours between entitlements check (default: '1')
+- `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)
 
 ## Deployment in a static pod
 
