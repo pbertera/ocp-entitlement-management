@@ -15,7 +15,7 @@ function get_cluster_uuid(){
     API="https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT"
 
     if [ "$DEBUG" == "yes" ]; then
-        DEBUG_OPTS="-v"
+        local DEBUG_OPTS="-v"
     fi
 
     CLUSTER_UUID=$(curl -s $DEBUG_OPTS -H "Authorization: Bearer $TOKEN" --cacert $CACERT $API/apis/config.openshift.io/v1/clusterversions/version | jq -r '.spec.clusterID')
@@ -26,7 +26,7 @@ function reconcile() {
     log "Reconciling, sending '$RECONCILE_JSON' to $SUB_ENDPOINT, result:"
 
     if [ "$DEBUG" == "yes" ]; then
-        DEBUG_OPTS="-v 10"
+        local DEBUG_OPTS="-v 10"
     fi
 
     log "$RECONCILE_JSON" | ocm $DEBUG_OPTS patch "$SUB_ENDPOINT"
@@ -35,7 +35,7 @@ function reconcile() {
 function check(){
     
     if [ "$DEBUG" == "yes" ]; then
-        DEBUG_OPTS="-v 10"
+        local DEBUG_OPTS="-v 10"
     fi
     
     if [ -f "$TOKENFILE" ]; then
