@@ -29,7 +29,7 @@ function reconcile() {
         local DEBUG_OPTS="-v 10"
     fi
 
-    log "$RECONCILE_JSON" | ocm $DEBUG_OPTS patch "$SUB_ENDPOINT"
+    echo "$RECONCILE_JSON" | ocm $DEBUG_OPTS patch "$SUB_ENDPOINT"
 }
 
 function check(){
