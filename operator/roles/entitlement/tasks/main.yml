@@ -29,7 +29,7 @@
               - name: LOOP_HOURS
                 value: '{{ loop_hours }}'
               - name: CLUSTER_UUID
-                value: '{{ cluster_UUID }}'
+                value: '{{ cluster_uuid }}'
               - name: USAGE
                 value: '{{ usage }}'
               - name: DEBUG

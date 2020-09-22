@@ -2,7 +2,7 @@
 # defaults file for entitlement
 support_level: "Self-Support"
 ocm_token_secret: "ocm-token"
-cluster_UUID: ""
+cluster_uuid: ""
 loop_hours: "1"
 debug: "no"
 display_name: ""
