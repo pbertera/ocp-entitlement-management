@@ -25,7 +25,13 @@ $ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/op
 $ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/operator/deploy/role_binding.yaml
 ```
 
-4. deploy the operator
+4. apply the `CustomResource` quota
+
+```
+$ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/operator/deploy/quota.yaml
+```
+
+5. deploy the operator
 
 ```
 $ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/operator/deploy/operator.yaml
@@ -38,13 +44,13 @@ $ oc describe deployment ocp-entitlement-manager-operator
 $ oc get pods # should return a pod with name entitlement-manager-xxxx
 ```
 
-5. create the secret: you have to get the token from [https://cloud.redhat.com/openshift/token](https://cloud.redhat.com/openshift/token)
+6. create the secret: you have to get the token from [https://cloud.redhat.com/openshift/token](https://cloud.redhat.com/openshift/token)
 
 ```
 $ oc create secret generic ocm-token --from-literal=ocm-token.json="eyJ...."
 ```
 
-6. create the `Entitlement` custom resource:
+7. create the `Entitlement` custom resource:
 
 ```
 $ cat <<EOF | oc create -f -
@@ -59,7 +65,7 @@ spec:
   usage: "Production"
 ```
 
-7. check the entitlment
+8. check the entitlment
 
 ```
 $ oc get entitlement

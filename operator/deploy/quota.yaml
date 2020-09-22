@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: entitlement-quota
+spec:
+  hard: # only 1 entitlment is possible
+    count/entitlements.entitlement-manager.bertera.it: "1"
