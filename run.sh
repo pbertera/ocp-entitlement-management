@@ -84,7 +84,7 @@ function check(){
         log "Found $DISPLAY_NAME_F display name, wanted: $DISPLAY_NAME"
         if [ "$DISPLAY_NAME" != "$DISPLAY_NAME_F" ]; then
             RECONCILE="yes"
-            RECONCILE_JSON="$RECONCILE_JSON \"support_level\":\"$DISPLAY_NAME\","
+            RECONCILE_JSON="$RECONCILE_JSON \"display_name\":\"$DISPLAY_NAME\","
         fi
     fi
 
