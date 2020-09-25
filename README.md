@@ -60,7 +60,7 @@ metadata:
   name: "cluster-entitlement"
 spec:
   ocmTokenSecret: "ocm-token"
-  loopHours: 1
+  loopHours: "1"
   supportLevel: "Self-Support"
   usage: "Production"
 ```
@@ -80,9 +80,25 @@ Checking the pod logs should help troubleshooting the issue
 
 ### Entitlment specs
 
+```
+apiVersion: "entitlement-manager.bertera.it/v1alpha1"
+kind: "Entitlement"
+metadata:
+  name: <name>
+spec:
+  ocmTokenSecret: <secret-mname>
+  loopHours: <loop-hours>
+  supportLevel: <support-level>
+  usage: <usage>
+  clusterUUID: <clusterUUID>
+  displayName: <display-name>
+  archived: <archived-flag>
+  debug: <debug-flag>
+```
+
 - `supportLevel`: (string) valid values: `Self-Support`, `Eval`, `Standard`, `Premium`, `None` (default: 'Self-Support')
 - `usage`: (string) valid values: `Production`, `Development/Test`, `Disaster Recovery`, `Academic` (default: 'Production')
-- `ocmTokenSecret`: (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json` (default: 'ocm-token')
+- `ocmTokenSecret`: **mandatory** (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json` (default: 'ocm-token')
 - `loopHours`: (numeric string) interval in hours between entitlements check (default: '1')
 - `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)
 - `displayName`: (string) the cluster display name to show on [https://cloud.redhat.com/openshift/](https://cloud.redhat.com/openshift/) (default: empty)
