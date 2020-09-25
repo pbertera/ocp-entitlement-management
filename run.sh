@@ -95,6 +95,12 @@ function check(){
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"status\":\"Archived\","
         fi
+    else
+        if [ "$STATUS_F" == "Archived" ]; then
+            log "Found unwanted '$STATUS_F' status, wanted"
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"status\":\"Disconnected\","
+        fi
     fi
 
     RECONCILE_JSON="${RECONCILE_JSON::-1} }"
