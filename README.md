@@ -78,7 +78,7 @@ In case there is a mismatch between the `Entitlement` and the entitlement assign
 Checking the pod logs should help troubleshooting the issue
 
 
-### Entitlment specs
+### Entitlement specs
 
 ```
 apiVersion: "entitlement-manager.bertera.it/v1alpha1"
