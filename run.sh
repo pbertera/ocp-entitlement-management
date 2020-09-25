@@ -93,7 +93,7 @@ function check(){
         if [ "$STATUS_F" != "Archived" ]; then
             log "Found '$STATUS_F' status, wanted: 'Archived'"
             RECONCILE="yes"
-            ECONCILE_JSON="$RECONCILE_JSON \"status\":\"Archived\","
+            RECONCILE_JSON="$RECONCILE_JSON \"status\":\"Archived\","
         fi
     fi
 
