@@ -86,6 +86,7 @@ Checking the pod logs should help troubleshooting the issue
 - `loopHours`: (numeric string) interval in hours between entitlements check (default: '1')
 - `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)
 - `displayName`: (string) the cluster display name to show on [https://cloud.redhat.com/openshift/](https://cloud.redhat.com/openshift/) (default: empty)
+- `archived`: (string) if the cluster is archived. Valid values: `yes`, `no`
 - `debug`: (string) if value is `yes` debug is activated on the `entitlement-manager` pod
 
 ## Deployment in a static pod

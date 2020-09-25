@@ -60,12 +60,13 @@ function check(){
     SUPPORT_LEVEL_F=$(jq -r '.support_level' "/tmp/${CLUSTER_UUID}.subscription.json")
     USAGE_F=$(jq -r '.usage' "/tmp/${CLUSTER_UUID}.subscription.json")
     DISPLAY_NAME_F=$(jq -r '.display_name' "/tmp/${CLUSTER_UUID}.subscription.json")
+    STATUS_F=$(jq -r '.status' "/tmp/${CLUSTER_UUID}.subscription.json")
 
     RECONCILE="no"
     RECONCILE_JSON="{"
 
     if [ "$SUPPORT_LEVEL" ]; then
-        log "Found $SUPPORT_LEVEL_F support level, wanted: $SUPPORT_LEVEL"
+        log "Found '$SUPPORT_LEVEL_F' support level, wanted: '$SUPPORT_LEVEL'"
         if [ "$SUPPORT_LEVEL" != "$SUPPORT_LEVEL_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"support_level\":\"$SUPPORT_LEVEL\","
@@ -73,7 +74,7 @@ function check(){
     fi
 
     if [ "$USAGE" ]; then
-        log "Found $USAGE_F usage, wanted: $USAGE"
+        log "Found '$USAGE_F' usage, wanted: '$USAGE'"
         if [ "$USAGE" != "$USAGE_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"usage\":\"$USAGE\","
@@ -81,10 +82,18 @@ function check(){
     fi
 
     if [ "$DISPLAY_NAME" ]; then
-        log "Found $DISPLAY_NAME_F display name, wanted: $DISPLAY_NAME"
+        log "Found '$DISPLAY_NAME_F' display name, wanted: '$DISPLAY_NAME'"
         if [ "$DISPLAY_NAME" != "$DISPLAY_NAME_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"display_name\":\"$DISPLAY_NAME\","
+        fi
+    fi
+
+    if [ "$ARCHIVED" == "yes" ]; then
+        if [ "$STATUS_F" != "Archived" ]; then
+            log "Found '$STATUS_F' status, wanted: 'Archived'"
+            RECONCILE="yes"
+            ECONCILE_JSON="$RECONCILE_JSON \"status\":\"Archived\","
         fi
     fi
 

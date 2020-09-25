@@ -38,6 +38,8 @@
                 value: "/tmp/.ocm.json"
               - name: DISPLAY_NAME
                 value: '{{ display_name }}'
+              - name: ARCHIVED
+                value: '{{ archived }}'
               volumeMounts:
               - name: ocm-token
                 mountPath: /data
