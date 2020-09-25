@@ -93,6 +93,7 @@ spec:
   clusterUUID: <clusterUUID>
   displayName: <display-name>
   archived: <archived-flag>
+  maxReconcileExecutions: <max-reconcile>
   debug: <debug-flag>
 ```
 
@@ -103,6 +104,7 @@ spec:
 - `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)
 - `displayName`: (string) the cluster display name to show on [https://cloud.redhat.com/openshift/](https://cloud.redhat.com/openshift/) (default: empty)
 - `archived`: (string) if the cluster is archived. Valid values: `yes`, `no`
+- `maxReconcileExecutions` (numeric string) maximum number of reconcile executions without a changing the `Entitlement` resource, when reached the pod will exit with an error.
 - `debug`: (string) if value is `yes` debug is activated on the `entitlement-manager` pod
 
 ## Deployment in a static pod

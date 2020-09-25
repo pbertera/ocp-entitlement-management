@@ -4,6 +4,8 @@ set -eo pipefail
 
 TOKENFILE="${TOKENFILE-/data/ocm-token.json}"
 LOOP_HOURS="${LOOP_HOURS-1}"
+MAX_RECONCILE_EXECUTIONS=${MAX_RECONCILE_EXECUTIONS-3}
+RECONCILE_EXECUTIONS=0
 
 function log() {
     echo `date` $@
@@ -106,6 +108,14 @@ function check(){
     RECONCILE_JSON="${RECONCILE_JSON::-1} }"
 
     if [ "$RECONCILE" == "yes" ]; then
+        if [ $MAX_RECONCILE_EXECUTIONS -gt 0 ]; then
+            RECONCILE_EXECUTIONS=$(($RECONCILE_EXECUTIONS + 1))
+            log "maxReconcileExecutions not set"
+        fi
+        if [ $RECONCILE_EXECUTIONS -eq $MAX_RECONCILE_EXECUTIONS ]; then
+            log "ERROR: maximum number of reconcile executions reached, exiting"
+            exit 1
+        fi
         reconcile
     fi
 }

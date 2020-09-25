@@ -44,6 +44,9 @@ spec:
             archived:
               type: string
               pattern: '(^yes$|^no$)'
+            maxReconcileExecutions:
+              type: string
+              pattern: '(^[0-9]+$)'
 
   versions:
   - name: v1alpha1

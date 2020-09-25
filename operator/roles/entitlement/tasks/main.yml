@@ -40,6 +40,8 @@
                 value: '{{ display_name }}'
               - name: ARCHIVED
                 value: '{{ archived }}'
+              - name: MAX_RECONCILE_EXECUTIONS
+                value: {{ max_reconcile_executions }}
               volumeMounts:
               - name: ocm-token
                 mountPath: /data
