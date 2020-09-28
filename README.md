@@ -100,7 +100,7 @@ spec:
 - `supportLevel`: (string) valid values: `Self-Support`, `Eval`, `Standard`, `Premium`, `None` (default: 'Self-Support')
 - `usage`: (string) valid values: `Production`, `Development/Test`, `Disaster Recovery`, `Academic` (default: 'Production')
 - `ocmTokenSecret`: **mandatory** (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json` (default: 'ocm-token')
-- `loopHours`: (numeric string) interval in hours between entitlements check (default: '1')
+- `loopHours`: (numeric string) interval in hours between entitlements check (default: '1'), minimum value: "1"
 - `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)
 - `displayName`: (string) the cluster display name to show on [https://cloud.redhat.com/openshift/](https://cloud.redhat.com/openshift/) (default: empty)
 - `archived`: (string) if the cluster is archived. Valid values: `yes`, `no`

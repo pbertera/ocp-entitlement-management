@@ -108,14 +108,16 @@ function check(){
     RECONCILE_JSON="${RECONCILE_JSON::-1} }"
 
     if [ "$RECONCILE" == "yes" ]; then
-        if [ $MAX_RECONCILE_EXECUTIONS -gt 0 ]; then
+        RECONCILE_EXECUTIONS=$(($RECONCILE_EXECUTIONS + 1))
+        if [ $MAX_RECONCILE_EXECUTIONS -eq 0 ]; then
             RECONCILE_EXECUTIONS=$(($RECONCILE_EXECUTIONS + 1))
             log "maxReconcileExecutions not set"
         fi
-        if [ $RECONCILE_EXECUTIONS -eq $MAX_RECONCILE_EXECUTIONS ]; then
+        if [ $RECONCILE_EXECUTIONS -gt $MAX_RECONCILE_EXECUTIONS ]; then
             log "ERROR: maximum number of reconcile executions reached, exiting"
             exit 1
         fi
+        log "Reconcile execution number $RECONCILE_EXECUTIONS"
         reconcile
     fi
 }
@@ -123,5 +125,9 @@ function check(){
 while true; do
     log "Checking cluster entitelment status"
     check
+    if [ $LOOP_HOURS -lt 1 ]; then
+        log "ERROR: loopHours < 1"
+        exit 1
+    fi
     sleep $(($LOOP_HOURS*3600))
 done
