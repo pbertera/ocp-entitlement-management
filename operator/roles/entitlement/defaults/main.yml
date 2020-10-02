@@ -1,11 +1,13 @@
 ---
 # defaults file for entitlement
 support_level: "Self-Support"
+service_level: "L1-L3"
+system_units: "Cores/vCPU"
+usage: "Production"
 ocm_token_secret: "ocm-token"
 cluster_uuid: ""
 loop_hours: "1"
 debug: "no"
 display_name: ""
-usage: "Production"
 max_reconcile_executions: "3"
 archived: "no"

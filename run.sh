@@ -63,6 +63,8 @@ function check(){
     USAGE_F=$(jq -r '.usage' "/tmp/${CLUSTER_UUID}.subscription.json")
     DISPLAY_NAME_F=$(jq -r '.display_name' "/tmp/${CLUSTER_UUID}.subscription.json")
     STATUS_F=$(jq -r '.status' "/tmp/${CLUSTER_UUID}.subscription.json")
+    SERVICE_LEVEL_F=$(jq -r '.service_level' "/tmp/${CLUSTER_UUID}.subscription.json")
+    SYSTEM_UNITS_F=$(jq -r '.system_units' "/tmp/${CLUSTER_UUID}.subscription.json")
 
     RECONCILE="no"
     RECONCILE_JSON="{"
@@ -88,6 +90,22 @@ function check(){
         if [ "$DISPLAY_NAME" != "$DISPLAY_NAME_F" ]; then
             RECONCILE="yes"
             RECONCILE_JSON="$RECONCILE_JSON \"display_name\":\"$DISPLAY_NAME\","
+        fi
+    fi
+
+    if [ "$SYSTEM_UNITS" ]; then
+        log "Found '$SYSTEM_UNITS_F' system units, wanted: '$SYSTEM_UNITS'"
+        if [ "$SYSTEM_UNITS" != "$SYSTEM_UNITS_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"system_units\":\"$SYSTEM_UNITS\","
+        fi
+    fi
+
+    if [ "$SERVICE_LEVEL" ]; then
+        log "Found '$SERVICE_LEVEL_F' service level, wanted: '$SERVICE_LEVEL'"
+        if [ "$SERVICE_LEVEL" != "$SERVICE_LEVEL_F" ]; then
+            RECONCILE="yes"
+            RECONCILE_JSON="$RECONCILE_JSON \"service_level\":\"$SERVICE_LEVEL\","
         fi
     fi
 

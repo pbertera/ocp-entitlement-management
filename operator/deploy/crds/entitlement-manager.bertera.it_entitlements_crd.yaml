@@ -41,6 +41,12 @@ spec:
               pattern: '(^yes$|^no$)'
             displayName:
               type: string
+            serviceLevel:
+              type: string
+              pattern: '(^L1-L3$|^L3-only$)'
+            systemUnits:
+              type: string
+              pattern: '(^Cores/vCPU$|^Sockets$)'
             archived:
               type: string
               pattern: '(^yes$|^no$)'

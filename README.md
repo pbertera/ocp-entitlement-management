@@ -22,6 +22,7 @@ $ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/op
 
 ```
 $ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/operator/deploy/role.yaml
+$ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/operator/deploy/service_account.yaml
 $ oc create -f https://github.com/pbertera/ocp-entitlement-manager/raw/master/operator/deploy/role_binding.yaml
 ```
 
@@ -63,6 +64,7 @@ spec:
   loopHours: "1"
   supportLevel: "Self-Support"
   usage: "Production"
+EOF
 ```
 
 8. check the entitlment
@@ -99,6 +101,8 @@ spec:
 
 - `supportLevel`: (string) valid values: `Self-Support`, `Eval`, `Standard`, `Premium`, `None` (default: 'Self-Support')
 - `usage`: (string) valid values: `Production`, `Development/Test`, `Disaster Recovery`, `Academic` (default: 'Production')
+- `serviceLevel`: (string) valid values: `L1-L3`, `L3-only` (default: `L1-L3`)
+- `systemUnits`: (string) valid values: `Cores/vCPU`, `Sockets` (default: `Cores/vCPU`)
 - `ocmTokenSecret`: **mandatory** (string) the name of the secret containing the cloud.redhat.com token, the key name must be `ocm-token.json` (default: 'ocm-token')
 - `loopHours`: (numeric string) interval in hours between entitlements check (default: '1'), minimum value: "1"
 - `clusterUUID`: (string) the OpenShift cluster UUID (default: empty). If not defined the operator will gather the UUID from the API (here the reason for the `ClusterRole`)

@@ -28,6 +28,10 @@
                 value: '{{ support_level }}'
               - name: LOOP_HOURS
                 value: '{{ loop_hours }}'
+              - name: SERVICE_LEVEL
+                value: '{{ service_level }}'
+              - name: SYSTEM_UNITS
+                value: '{{ system_units }}'
               - name: CLUSTER_UUID
                 value: '{{ cluster_uuid }}'
               - name: USAGE
@@ -41,7 +45,7 @@
               - name: ARCHIVED
                 value: '{{ archived }}'
               - name: MAX_RECONCILE_EXECUTIONS
-                value: {{ max_reconcile_executions }}
+                value: '{{ max_reconcile_executions }}'
               volumeMounts:
               - name: ocm-token
                 mountPath: /data
