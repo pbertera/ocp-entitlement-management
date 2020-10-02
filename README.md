@@ -88,10 +88,12 @@ kind: "Entitlement"
 metadata:
   name: <name>
 spec:
-  ocmTokenSecret: <secret-mname>
-  loopHours: <loop-hours>
   supportLevel: <support-level>
   usage: <usage>
+  serviceLevel: <service-level>
+  systemUnits: <system-units>
+  ocmTokenSecret: <secret-mname>
+  loopHours: <loop-hours>
   clusterUUID: <clusterUUID>
   displayName: <display-name>
   archived: <archived-flag>
